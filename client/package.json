@@ -1,7 +1,5 @@
 {
   "name": "boilerplate-app-client",
-  "version": "0.1.0",
-  "private": true,
   "dependencies": {
     "@material-ui/core": "^4.1.1",
     "@material-ui/icons": "^4.2.0",
