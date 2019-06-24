@@ -57,10 +57,10 @@ api.get("/example", function(req, resp) {
 // Socket handlers.
 
 /**
- * GET /api/example
- * Description of what this route does.
+ * NAMESPACE /foo
+ * Description of what sockets on this namespace do.
  */
-io.on('connection', (socket) => {
+io.of('/foo').on('connect', (socket) => {
     console.log('Client connected');
     socket.on('disconnect', () => {
         console.log('Client disconnected');
