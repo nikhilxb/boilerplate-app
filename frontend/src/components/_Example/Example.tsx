@@ -1,25 +1,21 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Immutable from 'seamless-immutable';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { createSelector } from 'reselect';
+import { AppState } from '../../store';
 
 /* This [pure dumb / stateful dumb / smart] component ___. */
 type ExampleProps = {
-    /* CSS-in-JS styling object. */
-    classes: any;
-
     /* React components within opening & closing tags. */
-    children: React.ReactNode;
+    children?: React.ReactNode;
 };
 
-type ExampleState = {
-    // Optional
-};
+type ExampleState = {};
 
-class Example extends React.Component<ExampleProps, ExampleState> {
+class Example extends React.Component<ExampleProps & InternalProps, ExampleState> {
     /* Prop default values. */
     static defaultProps = {
         // key: value,
@@ -29,7 +25,7 @@ class Example extends React.Component<ExampleProps, ExampleState> {
      * Constructor.
      * @param props
      */
-    constructor(props: ExampleProps) {
+    constructor(props: ExampleProps & InternalProps) {
         super(props);
         this.state = Immutable({});
     }
@@ -49,36 +45,35 @@ class Example extends React.Component<ExampleProps, ExampleState> {
     }
 }
 
-// To inject styles into component
-// -------------------------------
+const styles = (theme: Theme) =>
+    createStyles({
+        // css-key: value,
+        container: {},
+        optional: {},
+    });
 
-/* CSS-in-JS styling function. */
-export default withStyles((theme) => ({
-    // css-key: value,
-}))(Example);
+// TODO: For dumb components:
 
-// TODO: For dumb components, just use the code above. Delete the code below and `connect`,
-// `bindActionCreators` `createSelector` imports. For smart components, use the code below.
+type InternalProps = WithStyles<typeof styles>;
 
-// To inject application state into component
-// ------------------------------------------
+export default withStyles(styles)(Example) as React.ComponentType<ExampleProps>;
 
-/* Connects application state objects to component props. */
+// TODO: For smart components:
+
 function mapStateToProps() {
     // By returning function, it is possible to customize for each instance of a component depending
     // on its state and props. Also it creates a different selector for each instance so they don't
     // clash.
-    return (state: ExampleState, props: ExampleProps) => ({
-        // propName1: state.subslice,
+    return (state: AppState, props: ExampleProps) => ({
+        // propName1: getExampleData(state.subslice),
         // propName2: createSelector(
         //     (state) => state.subslice,
         //     (state, props) => props.value,
-        //     (subslice, value) => subslice[0] + value,
+        //     (subslice, value) => getExampleData(subslice) + value,
         // )(state, props),
     });
 }
 
-/* Connects bound action creator functions to component props. */
 function mapDispatchToProps(dispatch: Dispatch) {
     return bindActionCreators(
         {
@@ -88,6 +83,13 @@ function mapDispatchToProps(dispatch: Dispatch) {
     );
 }
 
-// export default connect(mapStateToProps, mapDispatchToProps)(
-//     withStyles(styles)(Example)
+// type InternalProps = (
+//     WithStyles<typeof styles> &
+//     ReturnType<ReturnType<typeof mapStateToProps>> &
+//     ReturnType<typeof mapDispatchToProps>
 // );
+
+// export default connect(
+//     mapStateToProps,
+//     mapDispatchToProps,
+// )(withStyles(styles)(Example)) as React.ComponentType<ExampleProps>;

@@ -3,14 +3,13 @@
  * https://stackoverflow.com/questions/11744975/enabling-https-on-express-js
  */
 
-import express from "express";  // Web app framework.
-import http from "http";  // Serving over HTTP.
+import express from 'express'; // Web app framework.
+import http from 'http'; // Serving over HTTP.
 // import https from "https";  // Serving over HTTPS.
-import fs from "fs";  // Filesystem IO.
-import path from "path";  // Filesystem paths.
-import socketio from "socket.io";  // Inter-process socket communication.
-import dotenv from "dotenv";  // Environment configuration.
-
+import fs from 'fs'; // Filesystem IO.
+import path from 'path'; // Filesystem paths.
+import socketio from 'socket.io'; // Inter-process socket communication.
+import dotenv from 'dotenv'; // Environment configuration.
 
 // Load environment configuration variable into `process.env`.
 dotenv.config();
@@ -26,15 +25,15 @@ let io = socketio(serverHttp);
 // Frontend request handlers.
 
 // Set directory to serve files from (e.g. React client).
-if(process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, "../client/build")));
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../client/build')));
 }
 
 /**
  * GET /hello
  * Sends an acknowledgement string, so that a client can check whether the server is up and running.
  */
-app.get("/hello", function(req, resp) {
+app.get('/hello', function(req, resp) {
     resp.send(`Server is up and running!`);
 });
 
@@ -42,13 +41,13 @@ app.get("/hello", function(req, resp) {
 // API request handlers.
 
 const api = express.Router();
-app.use("/api", api);
+app.use('/api', api);
 
 /**
  * GET /api/example
  * Description of what this route does.
  */
-api.get("/example", function(req, resp) {
+api.get('/example', function(req, resp) {
     // resp.send(something);
     // resp.sendStatus(404);
 });

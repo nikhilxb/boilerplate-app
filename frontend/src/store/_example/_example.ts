@@ -1,11 +1,11 @@
 import { Dispatch } from 'redux';
-import Immutable, { Immutable as ImmutableT } from 'seamless-immutable';
+import Immutable, { ImmutableObject, ImmutableArray } from 'seamless-immutable';
 
 // =================================================================================================
 // State slice.
 
 /* Root reducer's state slice type. */
-export type ExampleState = ImmutableT<{
+export type ExampleState = ImmutableObject<{
     // Description of data member.
     data: number;
 }>;
@@ -36,8 +36,7 @@ export function getExampleData(state: ExampleState): number {
 // =================================================================================================
 // Actions (public) and reducers.
 
-type NoOp = { type: '' };
-type ExampleAction = Action1 | NoOp;
+type ExampleAction = Action1;
 
 /**
  * Root reducer for state related to ____.
@@ -46,13 +45,13 @@ type ExampleAction = Action1 | NoOp;
  */
 export default function rootReducer(
     state: ExampleState = initialState,
-    action: ExampleAction = { type: '' },
+    action: ExampleAction,
 ): ExampleState {
     switch (action.type) {
         case 'Action1':
             return syncReducer(state, action);
         default:
-            return state; // No effect by default
+            return state; // No effect by default.
     }
 }
 
