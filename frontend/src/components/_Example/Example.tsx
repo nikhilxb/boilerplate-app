@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { createSelector } from 'reselect';
 import { AppState } from '../../store';
-import * as example from '../../store/example';
+import * as example from '../../store/_example';
 
 /* This [pure dumb / stateful dumb / smart] component ___. */
 type ExampleProps = {
