@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { createSelector } from 'reselect';
 import { AppState } from '../../store';
+import * as example from '../../store/example';
 
 /* This [pure dumb / stateful dumb / smart] component ___. */
 type ExampleProps = {
@@ -47,49 +48,46 @@ class Example extends React.Component<ExampleProps & InternalProps, ExampleState
 
 const styles = (theme: Theme) =>
     createStyles({
-        // css-key: value,
+        // cssKey: value,
         container: {},
         optional: {},
     });
 
 // TODO: For dumb components:
 
-type InternalProps = WithStyles<typeof styles>;
+// type InternalProps = WithStyles<typeof styles>;
 
-export default withStyles(styles)(Example) as React.ComponentType<ExampleProps>;
+// export default withStyles(styles)(Example) as React.ComponentType<ExampleProps>;
 
 // TODO: For smart components:
 
 function mapStateToProps() {
-    // By returning function, it is possible to customize for each instance of a component depending
-    // on its state and props. Also it creates a different selector for each instance so they don't
-    // clash.
-    return (state: AppState, props: ExampleProps) => ({
-        // propName1: getExampleData(state.subslice),
-        // propName2: createSelector(
-        //     (state) => state.subslice,
-        //     (state, props) => props.value,
-        //     (subslice, value) => getExampleData(subslice) + value,
-        // )(state, props),
-    });
+    return (state: AppState, props: ExampleProps) => {
+        const exampleDataSelector = example.selectors.exampleDataFactory();
+        return {
+            propName1: exampleDataSelector(state),
+            propName2: createSelector(
+                (state: AppState, props: ExampleProps) => props.children,
+                (children) => children,
+            )(state, props),
+        };
+    };
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {
     return bindActionCreators(
         {
-            // propName: doSomethingAction,
+            propName: example.actions.syncAction,
         },
         dispatch,
     );
 }
 
-// type InternalProps = (
-//     WithStyles<typeof styles> &
-//     ReturnType<ReturnType<typeof mapStateToProps>> &
-//     ReturnType<typeof mapDispatchToProps>
-// );
+type InternalProps = WithStyles<typeof styles> &
+    ReturnType<ReturnType<typeof mapStateToProps>> &
+    ReturnType<typeof mapDispatchToProps>;
 
-// export default connect(
-//     mapStateToProps,
-//     mapDispatchToProps,
-// )(withStyles(styles)(Example)) as React.ComponentType<ExampleProps>;
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(withStyles(styles)(Example)) as React.ComponentType<ExampleProps>;
