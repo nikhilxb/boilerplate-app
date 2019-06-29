@@ -5,6 +5,7 @@ import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/s
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { createSelector } from 'reselect';
+
 import { AppState } from '../../store';
 import * as example from '../../store/_example';
 
@@ -62,16 +63,15 @@ const styles = (theme: Theme) =>
 // TODO: For smart components:
 
 function mapStateToProps() {
-    return (state: AppState, props: ExampleProps) => {
-        const exampleDataSelector = example.selectors.exampleDataFactory();
-        return {
-            propName1: exampleDataSelector(state),
-            propName2: createSelector(
-                (state: AppState, props: ExampleProps) => props.children,
-                (children) => children,
-            )(state, props),
-        };
-    };
+    const exampleDataSelector = example.selectors.exampleDataFactory();
+    const localSelector = createSelector(
+        (state: AppState, props: ExampleProps) => props.children,
+        (children) => children,
+    );
+    return (state: AppState, props: ExampleProps) => ({
+        propName1: exampleDataSelector(state),
+        propName2: localSelector(state, props),
+    });
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {
